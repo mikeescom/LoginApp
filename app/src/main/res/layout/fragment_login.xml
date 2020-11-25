@@ -13,8 +13,13 @@
         android:id="@+id/user_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        app:boxCornerRadiusTopStart="@dimen/border_radius"
+        app:boxCornerRadiusBottomEnd="@dimen/border_radius"
+        app:boxCornerRadiusBottomStart="@dimen/border_radius"
+        app:boxCornerRadiusTopEnd="@dimen/border_radius"
         app:errorEnabled="true"
-        android:hint="@string/user_name">
+        android:hint="@string/user_name"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/user_name_edit_text"
@@ -26,14 +31,20 @@
         android:id="@+id/password"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        app:boxCornerRadiusTopStart="@dimen/border_radius"
+        app:boxCornerRadiusBottomEnd="@dimen/border_radius"
+        app:boxCornerRadiusBottomStart="@dimen/border_radius"
+        app:boxCornerRadiusTopEnd="@dimen/border_radius"
         app:errorEnabled="true"
         android:layout_marginTop="@dimen/login_padding"
-        android:hint="@string/password">
+        android:hint="@string/password"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/password_edit_text"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:inputType="textPassword"/>
 
     </com.google.android.material.textfield.TextInputLayout>
 

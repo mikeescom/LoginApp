@@ -5,6 +5,9 @@
 
     <dimen name="register_padding">20dp</dimen>
     <dimen name="register_margin_bottom">25dp</dimen>
+    <dimen name="profile_margin_bottom">35dp</dimen>
+
+    <dimen name="border_radius">20dp</dimen>
 
     <dimen name="text_size_12">12sp</dimen>
     <dimen name="text_size_20">20sp</dimen>

@@ -11,6 +11,9 @@ public interface UserDao {
             "password LIKE :psw LIMIT 1")
     LiveData<User> findByUserIdAndPsw(String userId, String psw);
 
+    @Query("SELECT * FROM user WHERE id LIKE :id LIMIT 1")
+    LiveData<User> findByUserId(int id);
+
     @Insert
     long insert(User user);
 }

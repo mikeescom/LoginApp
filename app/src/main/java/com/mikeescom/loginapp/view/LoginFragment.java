@@ -16,30 +16,26 @@ import android.widget.Toast;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.mikeescom.loginapp.R;
+import com.mikeescom.loginapp.SharedPreferenceUtils;
 import com.mikeescom.loginapp.repository.db.User;
-import com.mikeescom.loginapp.viewmodel.LoginViewModel;
+import com.mikeescom.loginapp.viewmodel.AppViewModel;
 
 public class LoginFragment extends Fragment {
 
-    private LoginViewModel viewModel;
+    private AppViewModel viewModel;
     private TextInputEditText userNameEditText;
     private TextInputEditText pswNameEditText;
     private Button logIn;
     private Button signUp;
-    private final Observer<Boolean> validateLoginDataObserver = aBoolean -> {
-        if (aBoolean) {
-            findByUserIdAndPsw();
-            userNameEditText.setError(null);
-            pswNameEditText.setError(null);
-        } else {
-            userNameEditText.setError(getResources().getString(R.string.user_name_error_message));
-            pswNameEditText.setError(getResources().getString(R.string.password_error_message));
-        }
-    };
+    private SharedPreferenceUtils sp;
+
     private final Observer<User> findByUserIdAndPswObserver = user -> {
         if (user != null) {
-            goToProfile();
+            sp.setLoggedUserId(user.getId());
+            goToProfile(user.getId());
         } else {
+            userNameEditText.setText("");
+            pswNameEditText.setText("");
             Toast.makeText(getContext(), getResources().getString(R.string.user_does_not_exist), Toast.LENGTH_LONG).show();
         }
     };
@@ -47,13 +43,17 @@ public class LoginFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        viewModel = new ViewModelProvider(this).get(LoginViewModel.class);
+        viewModel = new ViewModelProvider(this).get(AppViewModel.class);
+        sp = SharedPreferenceUtils.getInstance(getContext());
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_login, container, false);
+        if (sp.getLoggedUserId() != 0) {
+            goToProfile(sp.getLoggedUserId());
+        }
         initViews(view);
         return view;
     }
@@ -63,9 +63,38 @@ public class LoginFragment extends Fragment {
         pswNameEditText = view.findViewById(R.id.password_edit_text);
         logIn = view.findViewById(R.id.log_in);
         logIn.setOnClickListener(v -> viewModel.validateLogin(userNameEditText.getText().toString()
-                , pswNameEditText.getText().toString()).observe(getViewLifecycleOwner(), validateLoginDataObserver));
+                , pswNameEditText.getText().toString()));
         signUp = view.findViewById(R.id.sign_up);
         signUp.setOnClickListener(v -> goToRegister());
+
+        observeLoginData();
+
+    }
+
+    private void observeLoginData() {
+        viewModel.isLoginDataValid.observe(getViewLifecycleOwner(), aBoolean -> {
+            if (aBoolean) {
+                findByUserIdAndPsw();
+                userNameEditText.setError(null);
+                pswNameEditText.setError(null);
+            }
+        });
+
+        viewModel.isLoginUserIdValid.observe(getViewLifecycleOwner(), aBoolean -> {
+            if (aBoolean) {
+                userNameEditText.setError(null);
+            } else {
+                userNameEditText.setError(getResources().getString(R.string.user_name_error_message));
+            }
+        });
+
+        viewModel.isLoginPasswordValid.observe(getViewLifecycleOwner(), aBoolean -> {
+            if (aBoolean) {
+                pswNameEditText.setError(null);
+            } else {
+                pswNameEditText.setError(getResources().getString(R.string.password_error_message));
+            }
+        });
     }
 
     private void findByUserIdAndPsw() {
@@ -73,8 +102,10 @@ public class LoginFragment extends Fragment {
                         , pswNameEditText.getText().toString()).observe(getViewLifecycleOwner(), findByUserIdAndPswObserver);
     }
 
-    private void goToProfile() {
-        Intent intent = new Intent();
+    private void goToProfile(int id) {
+        Intent intent = new Intent(getContext(), ProfileActivity.class);
+        intent.putExtra("USER_ID", id);
+        startActivity(intent);
     }
 
     private void goToRegister() {

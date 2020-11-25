@@ -20,6 +20,10 @@ public class Repository {
         return db.userDao().findByUserIdAndPsw(userId, psw);
     }
 
+    public LiveData<User> findByUserId(int id) {
+        return db.userDao().findByUserId(id);
+    }
+
     public LiveData<Long> insert(User user) {
         MutableLiveData<Long> liveData = new MutableLiveData<>();
         liveData.postValue(db.userDao().insert(user));

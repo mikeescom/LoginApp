@@ -3,7 +3,6 @@ package com.mikeescom.loginapp.view;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
 
@@ -16,21 +15,22 @@ import android.widget.Toast;
 import com.google.android.material.textfield.TextInputEditText;
 import com.mikeescom.loginapp.R;
 import com.mikeescom.loginapp.repository.db.User;
-import com.mikeescom.loginapp.viewmodel.LoginViewModel;
+import com.mikeescom.loginapp.viewmodel.AppViewModel;
 
 public class RegisterFragment extends Fragment {
-    private LoginViewModel viewModel;
+    private AppViewModel viewModel;
     private TextInputEditText firstNameEditText;
     private TextInputEditText lastNameEditText;
     private TextInputEditText emailEditText;
     private TextInputEditText userNameEditText;
     private TextInputEditText passwordEditText;
     private Button register;
+    private User user;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        viewModel = new ViewModelProvider(this).get(LoginViewModel.class);
+        viewModel = new ViewModelProvider(this).get(AppViewModel.class);
     }
 
     @Override
@@ -49,20 +49,64 @@ public class RegisterFragment extends Fragment {
         passwordEditText = view.findViewById(R.id.password_edit_text);
         register = view.findViewById(R.id.register);
         register.setOnClickListener(v -> {
-            User user = new User();
+            user = new User();
             user.setFirstName(firstNameEditText.getText().toString());
             user.setLastName(lastNameEditText.getText().toString());
             user.setEmail(emailEditText.getText().toString());
             user.setUserId(userNameEditText.getText().toString());
             user.setPassword(passwordEditText.getText().toString());
-            viewModel.validateRegister(user).observe(getViewLifecycleOwner(), aBoolean -> {
-                if (aBoolean) {
-                    registerUser(user);
-                    hideErrorMessages();
-                } else {
-                    showErrorMessages();
-                }
-            });
+            viewModel.validateRegister(user);
+
+            observeRegisterData();
+        });
+    }
+
+    private void observeRegisterData() {
+        viewModel.isRegisterDataValid.observe(getViewLifecycleOwner(), aBoolean -> {
+            if (aBoolean) {
+                registerUser(user);
+                hideErrorMessages();
+            }
+        });
+
+        viewModel.isRegisterFirstNameValid.observe(getViewLifecycleOwner(), aBoolean -> {
+            if (aBoolean) {
+                firstNameEditText.setError(null);
+            } else {
+                firstNameEditText.setError(getResources().getString(R.string.first_name_error_message));
+            }
+        });
+
+        viewModel.isRegisterLastNameValid.observe(getViewLifecycleOwner(), aBoolean -> {
+            if (aBoolean) {
+                lastNameEditText.setError(null);
+            } else {
+                lastNameEditText.setError(getResources().getString(R.string.last_name_error_message));
+            }
+        });
+
+        viewModel.isRegisterEmailValid.observe(getViewLifecycleOwner(), aBoolean -> {
+            if (aBoolean) {
+                emailEditText.setError(null);
+            } else {
+                emailEditText.setError(getResources().getString(R.string.email_error_message));
+            }
+        });
+
+        viewModel.isRegisterUserIdValid.observe(getViewLifecycleOwner(), aBoolean -> {
+            if (aBoolean) {
+                userNameEditText.setError(null);
+            } else {
+                userNameEditText.setError(getResources().getString(R.string.user_name_error_message));
+            }
+        });
+
+        viewModel.isRegisterPasswordValid.observe(getViewLifecycleOwner(), aBoolean -> {
+            if (aBoolean) {
+                passwordEditText.setError(null);
+            } else {
+                passwordEditText.setError(getResources().getString(R.string.password_error_message));
+            }
         });
     }
 
@@ -87,13 +131,5 @@ public class RegisterFragment extends Fragment {
         emailEditText.setError(null);
         userNameEditText.setError(null);
         passwordEditText.setError(null);
-    }
-
-    private void showErrorMessages() {
-        firstNameEditText.setError(RegisterFragment.this.getResources().getString(R.string.first_name_error_message));
-        lastNameEditText.setError(RegisterFragment.this.getResources().getString(R.string.last_name_error_message));
-        emailEditText.setError(RegisterFragment.this.getResources().getString(R.string.email_error_message));
-        userNameEditText.setError(RegisterFragment.this.getResources().getString(R.string.user_name_error_message));
-        passwordEditText.setError(RegisterFragment.this.getResources().getString(R.string.password_error_message));
     }
 }

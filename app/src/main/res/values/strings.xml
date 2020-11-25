@@ -3,16 +3,22 @@
     <string name="user_name">User name</string>
     <string name="password">Password</string>
     <string name="log_in">Log in</string>
+    <string name="log_out">Log out</string>
     <string name="sign_up">Sign up</string>
     <string name="register">Register</string>
 
     <string name="user_does_not_exist">User does not exist. Please sign up.</string>
     <string name="user_registered_successfully">User registered successfully.</string>
     <string name="user_could_not_be_added">User could not be added this time.</string>
+    <string name="user_info_could_not_be_loaded">User information could not be loaded.</string>
 
     <string name="first_name_register">First Name</string>
     <string name="last_name_register">Last Name</string>
     <string name="email_register">Email</string>
+
+    <string name="full_name_profile">Full Name</string>
+    <string name="email_profile">Email</string>
+    <string name="user_id_profile">User Id</string>
 
     <string name="name_form">Name:</string>
     <string name="email_form">Email:</string>

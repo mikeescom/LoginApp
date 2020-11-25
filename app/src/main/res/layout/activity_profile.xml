@@ -3,65 +3,60 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:gravity="center"
-    android:padding="@dimen/register_padding"
-    tools:context=".view.RegisterFragment">
+    android:orientation="vertical"
+    android:background="@color/activity_background"
+    tools:context=".view.ProfileActivity">
 
     <TextView
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="@dimen/text_size_12"
-        android:text="@string/name_form"/>
+        android:text="@string/full_name_profile"/>
     <TextView
         android:id="@+id/full_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/register_margin_bottom"
+        android:layout_marginBottom="@dimen/profile_margin_bottom"
+        android:gravity="center"
         android:textStyle="bold"
         android:textSize="@dimen/text_size_30"
-        tools:text="Miguel Saavedra Lozano" />
+        tools:text="Miguel Saavedra Lozano"/>
 
     <TextView
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="@dimen/text_size_12"
-        android:text="@string/email_form"/>
+        android:text="@string/email_profile"/>
     <TextView
         android:id="@+id/email"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/register_margin_bottom"
+        android:layout_marginBottom="@dimen/profile_margin_bottom"
+        android:gravity="center"
         android:textStyle="bold"
         android:textSize="@dimen/text_size_20"
         tools:text="mike@gmail.com"/>
 
     <TextView
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="@dimen/text_size_12"
-        android:text="@string/username_form"/>
+        android:text="@string/user_id_profile"/>
     <TextView
         android:id="@+id/user_id"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/register_margin_bottom"
+        android:layout_marginBottom="@dimen/profile_margin_bottom"
+        android:gravity="center"
         android:textStyle="bold"
-        android:textSize="@dimen/text_size_20"
+        android:textSize="@dimen/text_size_12"
         tools:text="mikeescom"/>
 
-    <TextView
-        android:layout_width="match_parent"
+    <Button
+        android:id="@+id/log_out"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="@dimen/text_size_12"
-        android:text="@string/password_form"/>
-    <TextView
-        android:id="@+id/password"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textStyle="bold"
-        android:textSize="@dimen/text_size_20"
-        android:inputType="textPassword"
-        tools:text="pasword"/>
+        android:layout_marginTop="@dimen/login_padding"
+        android:layout_gravity="center"
+        android:text="@string/log_out"
+        style="@style/Widget.MaterialComponents.Button.TextButton"/>
 
 </LinearLayout>
