@@ -1,5 +1,6 @@
 package com.mikeescom.loginapp.view;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -25,6 +26,23 @@ public class LoginFragment extends Fragment {
     private TextInputEditText pswNameEditText;
     private Button logIn;
     private Button signUp;
+    private final Observer<Boolean> validateLoginDataObserver = aBoolean -> {
+        if (aBoolean) {
+            findByUserIdAndPsw();
+            userNameEditText.setError(null);
+            pswNameEditText.setError(null);
+        } else {
+            userNameEditText.setError(getResources().getString(R.string.user_name_error_message));
+            pswNameEditText.setError(getResources().getString(R.string.password_error_message));
+        }
+    };
+    private final Observer<User> findByUserIdAndPswObserver = user -> {
+        if (user != null) {
+            goToProfile();
+        } else {
+            Toast.makeText(getContext(), getResources().getString(R.string.user_does_not_exist), Toast.LENGTH_LONG).show();
+        }
+    };
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -44,32 +62,22 @@ public class LoginFragment extends Fragment {
         userNameEditText = view.findViewById(R.id.user_name_edit_text);
         pswNameEditText = view.findViewById(R.id.password_edit_text);
         logIn = view.findViewById(R.id.log_in);
-        logIn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                viewModel.findByUserIdAndPsw(userNameEditText.getText().toString()
-                        , pswNameEditText.getText().toString()).observe(getViewLifecycleOwner(), new Observer<User>() {
-                    @Override
-                    public void onChanged(User user) {
-                        if (user != null) {
-                            goToProfile();
-                        } else {
-                            Toast.makeText(getContext(), getResources().getString(R.string.user_does_not_exist), Toast.LENGTH_LONG).show();
-                        }
-                    }
-                });
-            }
-        });
+        logIn.setOnClickListener(v -> viewModel.validateLogin(userNameEditText.getText().toString()
+                , pswNameEditText.getText().toString()).observe(getViewLifecycleOwner(), validateLoginDataObserver));
         signUp = view.findViewById(R.id.sign_up);
-        signUp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                NavHostFragment.findNavController(getParentFragment()).navigate(R.id.action_loginFragment_to_registerFragment);
-            }
-        });
+        signUp.setOnClickListener(v -> goToRegister());
+    }
+
+    private void findByUserIdAndPsw() {
+        viewModel.findByUserIdAndPsw(userNameEditText.getText().toString()
+                        , pswNameEditText.getText().toString()).observe(getViewLifecycleOwner(), findByUserIdAndPswObserver);
     }
 
     private void goToProfile() {
+        Intent intent = new Intent();
+    }
 
+    private void goToRegister() {
+        NavHostFragment.findNavController(getParentFragment()).navigate(R.id.action_loginFragment_to_registerFragment);
     }
 }

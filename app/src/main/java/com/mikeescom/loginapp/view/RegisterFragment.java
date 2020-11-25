@@ -3,64 +3,97 @@ package com.mikeescom.loginapp.view;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.fragment.NavHostFragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.Toast;
 
+import com.google.android.material.textfield.TextInputEditText;
 import com.mikeescom.loginapp.R;
+import com.mikeescom.loginapp.repository.db.User;
+import com.mikeescom.loginapp.viewmodel.LoginViewModel;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link RegisterFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class RegisterFragment extends Fragment {
-
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    public RegisterFragment() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment RegisterFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static RegisterFragment newInstance(String param1, String param2) {
-        RegisterFragment fragment = new RegisterFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
+    private LoginViewModel viewModel;
+    private TextInputEditText firstNameEditText;
+    private TextInputEditText lastNameEditText;
+    private TextInputEditText emailEditText;
+    private TextInputEditText userNameEditText;
+    private TextInputEditText passwordEditText;
+    private Button register;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+        viewModel = new ViewModelProvider(this).get(LoginViewModel.class);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_register, container, false);
+        View view = inflater.inflate(R.layout.fragment_register, container, false);
+        initView(view);
+        return view;
+    }
+
+    private void initView(View view) {
+        firstNameEditText = view.findViewById(R.id.first_name_edit_text);
+        lastNameEditText = view.findViewById(R.id.last_name_edit_text);
+        emailEditText = view.findViewById(R.id.email_edit_text);
+        userNameEditText = view.findViewById(R.id.user_name_edit_text);
+        passwordEditText = view.findViewById(R.id.password_edit_text);
+        register = view.findViewById(R.id.register);
+        register.setOnClickListener(v -> {
+            User user = new User();
+            user.setFirstName(firstNameEditText.getText().toString());
+            user.setLastName(lastNameEditText.getText().toString());
+            user.setEmail(emailEditText.getText().toString());
+            user.setUserId(userNameEditText.getText().toString());
+            user.setPassword(passwordEditText.getText().toString());
+            viewModel.validateRegister(user).observe(getViewLifecycleOwner(), aBoolean -> {
+                if (aBoolean) {
+                    registerUser(user);
+                    hideErrorMessages();
+                } else {
+                    showErrorMessages();
+                }
+            });
+        });
+    }
+
+    private void registerUser(User user) {
+        viewModel.addUser(user).observe(getViewLifecycleOwner(), aLong -> {
+            if (aLong != 0) {
+                Toast.makeText(getContext(), getResources().getString(R.string.user_registered_successfully), Toast.LENGTH_LONG).show();
+                goToLogin();
+            } else {
+                Toast.makeText(getContext(), getResources().getString(R.string.user_could_not_be_added), Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    private void goToLogin() {
+        NavHostFragment.findNavController(getParentFragment()).navigate(R.id.action_registerFragment_to_loginFragment);
+    }
+
+    private void hideErrorMessages() {
+        firstNameEditText.setError(null);
+        lastNameEditText.setError(null);
+        emailEditText.setError(null);
+        userNameEditText.setError(null);
+        passwordEditText.setError(null);
+    }
+
+    private void showErrorMessages() {
+        firstNameEditText.setError(RegisterFragment.this.getResources().getString(R.string.first_name_error_message));
+        lastNameEditText.setError(RegisterFragment.this.getResources().getString(R.string.last_name_error_message));
+        emailEditText.setError(RegisterFragment.this.getResources().getString(R.string.email_error_message));
+        userNameEditText.setError(RegisterFragment.this.getResources().getString(R.string.user_name_error_message));
+        passwordEditText.setError(RegisterFragment.this.getResources().getString(R.string.password_error_message));
     }
 }

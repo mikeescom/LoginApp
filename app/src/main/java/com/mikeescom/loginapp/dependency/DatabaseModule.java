@@ -16,6 +16,8 @@ public class DatabaseModule {
     @Provides
     @Singleton
     public AppDatabase provideAppDatabase(Application application) {
-        return Room.databaseBuilder(application, AppDatabase.class, "login-database").build();
+        return Room.databaseBuilder(application, AppDatabase.class, "login-database")
+                .allowMainThreadQueries()
+                .build();
     }
 }

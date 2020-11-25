@@ -1,15 +1,15 @@
 package com.mikeescom.loginapp.repository;
 
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 
-import com.mikeescom.loginapp.LoginApp;
 import com.mikeescom.loginapp.repository.db.AppDatabase;
 import com.mikeescom.loginapp.repository.db.User;
 
 import javax.inject.Inject;
 
 public class Repository {
-    private AppDatabase db;
+    private final AppDatabase db;
 
     @Inject
     public Repository(AppDatabase db) {
@@ -20,7 +20,9 @@ public class Repository {
         return db.userDao().findByUserIdAndPsw(userId, psw);
     }
 
-    public void insert(User user) {
-        db.userDao().insert(user);
+    public LiveData<Long> insert(User user) {
+        MutableLiveData<Long> liveData = new MutableLiveData<>();
+        liveData.postValue(db.userDao().insert(user));
+        return liveData;
     }
 }

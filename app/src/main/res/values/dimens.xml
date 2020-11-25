@@ -2,4 +2,11 @@
 <resources>
     <dimen name="login_padding">20dp</dimen>
     <dimen name="login_margin">30dp</dimen>
+
+    <dimen name="register_padding">20dp</dimen>
+    <dimen name="register_margin_bottom">25dp</dimen>
+
+    <dimen name="text_size_12">12sp</dimen>
+    <dimen name="text_size_20">20sp</dimen>
+    <dimen name="text_size_30">30sp</dimen>
 </resources>
