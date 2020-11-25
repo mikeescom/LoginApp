@@ -64,6 +64,6 @@ public class ProfileActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        finish();
+        Toast.makeText(this, getResources().getString(R.string.press_log_out_button), Toast.LENGTH_LONG).show();
     }
 }

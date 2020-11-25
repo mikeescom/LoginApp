@@ -11,6 +11,7 @@
     <string name="user_registered_successfully">User registered successfully.</string>
     <string name="user_could_not_be_added">User could not be added this time.</string>
     <string name="user_info_could_not_be_loaded">User information could not be loaded.</string>
+    <string name="press_log_out_button">Press log out button to go back to log in screen.</string>
 
     <string name="first_name_register">First Name</string>
     <string name="last_name_register">Last Name</string>
