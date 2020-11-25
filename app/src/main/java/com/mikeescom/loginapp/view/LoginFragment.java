@@ -103,12 +103,21 @@ public class LoginFragment extends Fragment {
     }
 
     private void goToProfile(int id) {
+        clearForm();
         Intent intent = new Intent(getContext(), ProfileActivity.class);
         intent.putExtra("USER_ID", id);
         startActivity(intent);
     }
 
     private void goToRegister() {
+        clearForm();
         NavHostFragment.findNavController(getParentFragment()).navigate(R.id.action_loginFragment_to_registerFragment);
+    }
+
+    private void clearForm() {
+        userNameEditText.setText("");
+        pswNameEditText.setText("");
+        userNameEditText.setError(null);
+        pswNameEditText.setError(null);
     }
 }
